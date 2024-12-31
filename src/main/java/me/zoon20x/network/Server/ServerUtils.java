@@ -16,7 +16,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ServerUtils {
-    private final List<ClientListener> listeners = new ArrayList<>();
 
 
     private ScheduledExecutorService scheduler;
@@ -28,31 +27,8 @@ public class ServerUtils {
         this.server = server;
     }
 
-    public void addListener(ClientListener listener) {
-        listeners.add(listener);
-    }
-    public void removeListener(ClientListener listener) {
-        listeners.remove(listener);
-    }
 
-    public void dispatchConnect(Socket clientAddress) {
-        ClientConnectEvent event = new ClientConnectEvent(clientAddress);
-        for (ClientListener listener : listeners) {
-            listener.onClientConnect(event);
-        }
-    }
-    public void dispatchSignIn(Client client) {
-        ClientSignInEvent event = new ClientSignInEvent(client);
-        for (ClientListener listener : listeners) {
-            listener.onClientSignIn(event);
-        }
-    }
-    public void dispatchMessage(Client client, Object value, PrintWriter out) {
-        ClientMessageEvent event = new ClientMessageEvent(client, value, out);
-        for (ClientListener listener : listeners) {
-            listener.onClientMessageEvent(event);
-        }
-    }
+
 
     public void startClientCheck(){
         scheduler.scheduleAtFixedRate(new Runnable() {
