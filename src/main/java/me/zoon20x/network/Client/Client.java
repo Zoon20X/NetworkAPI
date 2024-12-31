@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class Client implements Serializable {
     private final String clientID;
 
-
     public Client(String clientID) {
         this.clientID = clientID;
     }

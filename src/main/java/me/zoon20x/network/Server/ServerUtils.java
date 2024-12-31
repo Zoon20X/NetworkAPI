@@ -1,10 +1,7 @@
 package me.zoon20x.network.Server;
 
 import me.zoon20x.network.Client.Client;
-import me.zoon20x.network.Server.events.ClientConnectEvent;
-import me.zoon20x.network.Server.events.ClientListener;
-import me.zoon20x.network.Server.events.ClientMessageEvent;
-import me.zoon20x.network.Server.events.ClientSignInEvent;
+import me.zoon20x.network.Server.events.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,13 +19,14 @@ public class ServerUtils {
 
     private Server server;
 
+    private ClientEventManager clientEventManager;
+
     public ServerUtils(Server server){
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
         this.server = server;
+
+        this.clientEventManager = new ClientEventManager();
     }
-
-
-
 
     public void startClientCheck(){
         scheduler.scheduleAtFixedRate(new Runnable() {
@@ -37,7 +35,7 @@ public class ServerUtils {
                 try {
                     Socket clientSocket = server.getServerSocket().accept();
                     System.out.println("New connection from " + clientSocket.getInetAddress());
-                    dispatchConnect(clientSocket);
+                    clientEventManager.dispatchConnect(clientSocket);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -48,10 +46,14 @@ public class ServerUtils {
     public void run(ClientHandler clientHandler){
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         clientHandler.setService(scheduler);
-        scheduler.scheduleAtFixedRate(clientHandler, 0, 1, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(clientHandler, 0, 100, TimeUnit.MILLISECONDS);
     }
 
     public Server getServer() {
         return server;
+    }
+
+    public ClientEventManager getClientEventManager() {
+        return clientEventManager;
     }
 }

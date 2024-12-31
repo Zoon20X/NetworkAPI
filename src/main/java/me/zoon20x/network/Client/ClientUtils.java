@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class ClientUtils {
     private Client client;
 
+    private ScheduledExecutorService service;
 
     private PrintWriter out;
     private BufferedReader in;
@@ -32,7 +33,8 @@ public class ClientUtils {
 
     public void run(ServerHandler serverHandler){
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(serverHandler, 0, 1, TimeUnit.SECONDS);
+        service = scheduler;
+        scheduler.scheduleAtFixedRate(serverHandler, 0, 100, TimeUnit.MILLISECONDS);
     }
 
     private boolean connect(){
@@ -62,5 +64,9 @@ public class ClientUtils {
 
     public BufferedReader getServerMessages() {
         return in;
+    }
+
+    public ScheduledExecutorService getService() {
+        return service;
     }
 }

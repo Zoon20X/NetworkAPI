@@ -6,12 +6,15 @@ import me.zoon20x.network.Server.Server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class ServerHandler implements Runnable{
 
     private Server server;
     private ServerEventManager serverEventManager;
     private BufferedReader in;
+
+
 
     public ServerHandler(ServerEventManager serverEventManager, BufferedReader in){
         this.serverEventManager = serverEventManager;
@@ -22,7 +25,9 @@ public class ServerHandler implements Runnable{
     public void run() {
         try {
             if(in.ready()){
-                serverEventManager.dispatchMessage(SerializeData.setData(in.readLine()));
+                String value = in.readLine();
+                System.out.println(value);
+                serverEventManager.dispatchMessage(SerializeData.setData(value));
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);

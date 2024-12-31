@@ -1,6 +1,7 @@
 package me.zoon20x.network.Server;
 
 import me.zoon20x.network.Client.Client;
+import me.zoon20x.network.Packets.DisconnectPacket;
 import me.zoon20x.network.SerializeData;
 
 import java.io.BufferedReader;
@@ -36,9 +37,9 @@ public class ClientHandler implements Runnable{
     @Override
     public void run() {
 
-        System.out.println(count);
+        //System.out.println(count);
         count++;
-        if(count>=10){
+        if(count>=100){
             closeConnection();
         }
         try {
@@ -46,14 +47,14 @@ public class ClientHandler implements Runnable{
                 String value = in.readLine();
                 if(server.hasClient(socket)){
                     System.out.println("Client Connected");
-                    server.getServerUtils().dispatchMessage(server.getClient(socket), SerializeData.setData(value), out);
+                    server.getServerUtils().getClientEventManager().dispatchMessage(server.getClient(socket), SerializeData.setData(value), out);
                 }else{
                     System.out.println("client does not exist");
                     Object data = SerializeData.setData(value);
                     if(data instanceof Client) {
                         Client client = (Client) data;
                         server.addClient(socket, client);
-                        server.getServerUtils().dispatchSignIn(client);
+                        server.getServerUtils().getClientEventManager().dispatchSignIn(client);
                     }
                 }
             }
@@ -65,9 +66,11 @@ public class ClientHandler implements Runnable{
     private void closeConnection() {
         try {
             server.removeClient(socket);
+            out.println(SerializeData.toString(new DisconnectPacket()));
             if (out != null) out.close();
             if (in != null) in.close();
             if (socket != null) socket.close();
+
             System.out.println("Connection closed");
             service.shutdown();
         } catch (IOException e) {
