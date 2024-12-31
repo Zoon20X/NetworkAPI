@@ -1,5 +1,6 @@
 package me.zoon20x.network.Client.events;
 
+import me.zoon20x.network.Packets.DisconnectPacket;
 import me.zoon20x.network.Server.Server;
 import me.zoon20x.network.Server.events.ClientListener;
 import me.zoon20x.network.Server.events.ClientMessageEvent;
@@ -22,6 +23,12 @@ public class ServerEventManager {
         ServerMessageEvent event = new ServerMessageEvent(value);
         for (ServerListener listener : listeners) {
             listener.onServerMessageEvent(event);
+        }
+    }
+    public void dispatchDisconnect(DisconnectPacket packet) {
+        ServerDisconnectEvent event = new ServerDisconnectEvent(packet);
+        for (ServerListener listener : listeners) {
+            listener.onServerDisconnectEvent(event);
         }
     }
 }

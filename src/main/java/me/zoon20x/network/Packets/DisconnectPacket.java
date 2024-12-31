@@ -4,9 +4,13 @@ import java.io.Serializable;
 
 public class DisconnectPacket implements Serializable {
 
+    private String reason;
 
-    public DisconnectPacket(){
-
+    public DisconnectPacket(String reason){
+        this.reason = reason;
     }
 
+    public String getReason() {
+        return reason;
+    }
 }

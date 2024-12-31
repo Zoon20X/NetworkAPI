@@ -1,5 +1,6 @@
 package me.zoon20x.network.Client;
 
+import me.zoon20x.network.Packets.AuthPacket;
 import me.zoon20x.network.SerializeData;
 import me.zoon20x.network.Server.Server;
 import me.zoon20x.network.Server.events.ClientListener;
@@ -28,7 +29,6 @@ public class ClientUtils {
         this.client = client;
         this.ip = ip;
         this.port = port;
-        connect();
     }
 
     public void run(ServerHandler serverHandler){
@@ -37,13 +37,13 @@ public class ClientUtils {
         scheduler.scheduleAtFixedRate(serverHandler, 0, 100, TimeUnit.MILLISECONDS);
     }
 
-    private boolean connect(){
+    public boolean connect(String token){
         Socket socket = null;
         try {
             socket = new Socket(ip, port);
             this.out = new PrintWriter(socket.getOutputStream(), true);
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String connectString = SerializeData.toString(client);
+            String connectString = SerializeData.toString(new AuthPacket(token, client));
             out.println(connectString);
         } catch (IOException e) {
             e.printStackTrace();

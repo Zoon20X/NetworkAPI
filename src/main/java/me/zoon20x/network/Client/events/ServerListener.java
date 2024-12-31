@@ -8,4 +8,5 @@ import me.zoon20x.network.Server.events.ClientSignInEvent;
 public interface ServerListener {
 
     void onServerMessageEvent(ServerMessageEvent event);
+    void onServerDisconnectEvent(ServerDisconnectEvent event);
 }

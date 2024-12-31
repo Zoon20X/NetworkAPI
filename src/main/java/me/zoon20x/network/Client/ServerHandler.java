@@ -1,6 +1,7 @@
 package me.zoon20x.network.Client;
 
 import me.zoon20x.network.Client.events.ServerEventManager;
+import me.zoon20x.network.Packets.DisconnectPacket;
 import me.zoon20x.network.SerializeData;
 import me.zoon20x.network.Server.Server;
 
@@ -30,7 +31,12 @@ public class ServerHandler implements Runnable{
             if(in.ready()){
                 hasPacket = true;
                 packet = in.readLine();
-                serverEventManager.dispatchMessage(SerializeData.setData(packet));
+                Object packetObject = SerializeData.setData(packet);
+                if(packetObject instanceof DisconnectPacket){
+                    serverEventManager.dispatchDisconnect((DisconnectPacket) packetObject);
+                    return;
+                }
+                serverEventManager.dispatchMessage(packetObject);
             }else{
                 hasPacket = false;
             }

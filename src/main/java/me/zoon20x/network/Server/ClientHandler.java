@@ -1,6 +1,7 @@
 package me.zoon20x.network.Server;
 
 import me.zoon20x.network.Client.Client;
+import me.zoon20x.network.Packets.AuthPacket;
 import me.zoon20x.network.Packets.DisconnectPacket;
 import me.zoon20x.network.SerializeData;
 import me.zoon20x.network.logging.Logging;
@@ -43,22 +44,29 @@ public class ClientHandler implements Runnable{
     public void run() {
         count++;
         if(count>=100){
-            closeConnection();
+            closeConnection("Server Closed Connection");
         }
         try {
             if (in.ready()) {
                 hasPacket = true;
                 packet = in.readLine();
                 if(server.hasClient(socket)){
-                    Logging.log("Client Connected", Severity.Debug);
+                    Logging.log("Packet Received", Severity.Debug);
                     server.getServerUtils().getClientEventManager().dispatchMessage(server.getClient(socket), SerializeData.setData(packet), out);
                 }else{
                     Logging.log("client does not exist", Severity.Warning);
                     Object data = SerializeData.setData(packet);
-                    if(data instanceof Client) {
-                        Client client = (Client) data;
-                        server.addClient(socket, client);
-                        server.getServerUtils().getClientEventManager().dispatchSignIn(client);
+                    if(data instanceof AuthPacket){
+                        AuthPacket authPacket = (AuthPacket) data;
+                        if(server.getAuthentication().validateClientToken(authPacket.getToken())){
+                            Client client = authPacket.getClient();
+                            server.addClient(socket, client);
+                            server.getServerUtils().getClientEventManager().dispatchSignIn(client);
+                        }else{
+                            closeConnection("Incorrect Token");
+                        }
+                    }else{
+                        closeConnection("Failed Auth Check");
                     }
                 }
             }else{
@@ -70,10 +78,10 @@ public class ClientHandler implements Runnable{
 
     }
 
-    private void closeConnection() {
+    private void closeConnection(String reason) {
         try {
             server.removeClient(socket);
-            out.println(SerializeData.toString(new DisconnectPacket()));
+            out.println(SerializeData.toString(new DisconnectPacket(reason)));
             if (out != null) out.close();
             if (in != null) in.close();
             if (socket != null) socket.close();
