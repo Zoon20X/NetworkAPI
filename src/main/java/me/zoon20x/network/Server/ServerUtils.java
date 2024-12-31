@@ -2,6 +2,8 @@ package me.zoon20x.network.Server;
 
 import me.zoon20x.network.Client.Client;
 import me.zoon20x.network.Server.events.*;
+import me.zoon20x.network.logging.Logging;
+import me.zoon20x.network.logging.Severity;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -34,7 +36,7 @@ public class ServerUtils {
             public void run() {
                 try {
                     Socket clientSocket = server.getServerSocket().accept();
-                    System.out.println("New connection from " + clientSocket.getInetAddress());
+                    Logging.log("New connection from " + clientSocket.getInetAddress(), Severity.Debug);
                     clientEventManager.dispatchConnect(clientSocket);
                 } catch (IOException e) {
                     throw new RuntimeException(e);

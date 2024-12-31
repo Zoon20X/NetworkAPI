@@ -26,7 +26,6 @@ public class ServerHandler implements Runnable{
         try {
             if(in.ready()){
                 String value = in.readLine();
-                System.out.println(value);
                 serverEventManager.dispatchMessage(SerializeData.setData(value));
             }
         } catch (IOException | ClassNotFoundException e) {
