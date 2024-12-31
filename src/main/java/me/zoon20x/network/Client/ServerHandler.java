@@ -15,6 +15,9 @@ public class ServerHandler implements Runnable{
     private BufferedReader in;
 
 
+    private boolean hasPacket;
+    private String packet;
+
 
     public ServerHandler(ServerEventManager serverEventManager, BufferedReader in){
         this.serverEventManager = serverEventManager;
@@ -25,12 +28,23 @@ public class ServerHandler implements Runnable{
     public void run() {
         try {
             if(in.ready()){
-                String value = in.readLine();
-                serverEventManager.dispatchMessage(SerializeData.setData(value));
+                hasPacket = true;
+                packet = in.readLine();
+                serverEventManager.dispatchMessage(SerializeData.setData(packet));
+            }else{
+                hasPacket = false;
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public boolean hasPacket() {
+        return hasPacket;
+    }
+
+    public String getPacket() {
+        return packet;
     }
 }

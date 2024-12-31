@@ -23,6 +23,9 @@ public class ClientHandler implements Runnable{
 
     private ScheduledExecutorService service;
 
+    private boolean hasPacket;
+    private String packet;
+
 
     public ClientHandler(Server server, Socket socket){
         this.server = server;
@@ -38,31 +41,33 @@ public class ClientHandler implements Runnable{
 
     @Override
     public void run() {
-
-        //System.out.println(count);
         count++;
         if(count>=100){
             closeConnection();
         }
         try {
             if (in.ready()) {
-                String value = in.readLine();
+                hasPacket = true;
+                packet = in.readLine();
                 if(server.hasClient(socket)){
                     Logging.log("Client Connected", Severity.Debug);
-                    server.getServerUtils().getClientEventManager().dispatchMessage(server.getClient(socket), SerializeData.setData(value), out);
+                    server.getServerUtils().getClientEventManager().dispatchMessage(server.getClient(socket), SerializeData.setData(packet), out);
                 }else{
                     Logging.log("client does not exist", Severity.Warning);
-                    Object data = SerializeData.setData(value);
+                    Object data = SerializeData.setData(packet);
                     if(data instanceof Client) {
                         Client client = (Client) data;
                         server.addClient(socket, client);
                         server.getServerUtils().getClientEventManager().dispatchSignIn(client);
                     }
                 }
+            }else{
+                hasPacket = false;
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     private void closeConnection() {
@@ -82,5 +87,13 @@ public class ClientHandler implements Runnable{
 
     public void setService(ScheduledExecutorService service){
         this.service = service;
+    }
+
+    public boolean hasPacket() {
+        return hasPacket;
+    }
+
+    public String getPacket() {
+        return packet;
     }
 }
