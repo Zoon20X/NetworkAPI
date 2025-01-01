@@ -16,8 +16,6 @@ import java.util.UUID;
 public class Authentication {
     private String serverToken;
     private Config config;
-    private String serverIP = "127.0.0.1";
-    private int serverPort = 12345;
 
     public Authentication(Config config){
         this.config = config;
