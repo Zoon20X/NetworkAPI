@@ -55,7 +55,12 @@ public class ClientHandler implements Runnable{
                 packet = in.readLine();
                 if(server.hasClient(socket)){
                     Logging.log("Packet Received", Severity.Debug);
-                    server.getServerUtils().getClientEventManager().dispatchMessage(server.getClient(socket), SerializeData.setData(packet), out);
+                    Object data = SerializeData.setData(packet);
+                    if(data instanceof DisconnectPacket) {
+                        closeConnection(((DisconnectPacket) data).getReason());
+                        return;
+                    }
+                    server.getServerUtils().getClientEventManager().dispatchMessage(server.getClient(socket), data, out);
                     count = 0;
                 }else{
                     Logging.log("client does not exist", Severity.Warning);

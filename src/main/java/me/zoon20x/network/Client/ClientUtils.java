@@ -1,10 +1,13 @@
 package me.zoon20x.network.Client;
 
 import me.zoon20x.network.Packets.AuthPacket;
+import me.zoon20x.network.Packets.DisconnectPacket;
 import me.zoon20x.network.SerializeData;
 import me.zoon20x.network.Server.Server;
 import me.zoon20x.network.Server.events.ClientListener;
 import me.zoon20x.network.Server.events.ClientMessageEvent;
+import me.zoon20x.network.logging.Logging;
+import me.zoon20x.network.logging.Severity;
 
 import java.io.*;
 import java.net.Socket;
@@ -29,8 +32,15 @@ public class ClientUtils {
         this.client = client;
         this.ip = ip;
         this.port = port;
+        setupShutdownHook();
     }
-
+    private void setupShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            Logging.log("Application is shutting down...", Severity.Debug);
+            DisconnectPacket disconnectPacket = new DisconnectPacket("Client Shutdown");
+            sendToServer(disconnectPacket);
+        }));
+    }
     public void run(ServerHandler serverHandler){
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         service = scheduler;
