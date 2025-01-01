@@ -10,14 +10,18 @@ public class ConfigSection {
     public ConfigSection(Map<String, Object> configData){
         this.configData = configData;
     }
-    public int getInteger(){
-        return 0;
+    public int getInteger(String value){
+        return (int) configData.get(value);
+
     }
     public String getString(String value){
-        return configData.get(value).toString();
+        return (String) configData.get(value);
     }
-    public boolean getBoolean(){
-        return false;
+    public boolean getBoolean(String value){
+        return (boolean) configData.get(value);
+    }
+    public double getDouble(String value){
+        return (double) configData.get(value);
     }
     public void set(String value, Object data){
         configData.put(value, data);

@@ -51,14 +51,18 @@ public class Config {
         }
     }
 
-    public int getInteger(){
-        return 0;
+    public int getInteger(String value){
+        return (int) configData.get(value);
+
     }
-    public String getString(){
-        return "";
+    public String getString(String value){
+        return (String) configData.get(value);
     }
-    public boolean getBoolean(){
-        return false;
+    public boolean getBoolean(String value){
+        return (boolean) configData.get(value);
+    }
+    public double getDouble(String value){
+        return (double) configData.get(value);
     }
     public void set(String value, Object data){
         configData.put(value, data);

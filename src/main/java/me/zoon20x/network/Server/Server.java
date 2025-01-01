@@ -1,6 +1,7 @@
 package me.zoon20x.network.Server;
 
 import me.zoon20x.network.Client.Client;
+import me.zoon20x.network.File.Config;
 import me.zoon20x.network.Server.auth.Authentication;
 import me.zoon20x.network.logging.Logging;
 import me.zoon20x.network.logging.Severity;
@@ -22,11 +23,10 @@ public class Server {
 
     private final HashMap<Socket, Client> connectedClients = new HashMap<>();
 
-    public Server(String ip, int port){
+    public Server(String ip, int port, Config config){
         this.ip = ip;
         this.port = port;
-        this.authentication = new Authentication();
-
+        this.authentication = new Authentication(config);
     }
 
     public void start(){
