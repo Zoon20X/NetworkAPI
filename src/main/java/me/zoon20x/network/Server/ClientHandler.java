@@ -27,11 +27,14 @@ public class ClientHandler implements Runnable{
     private boolean hasPacket;
     private String packet;
 
+    private int timeOut;
+
 
     public ClientHandler(Server server, Socket socket){
         this.server = server;
         this.socket = socket;
         this.count = 0;
+        timeOut = 10*300;
         try {
             this.out = new PrintWriter(socket.getOutputStream(), true);
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -43,7 +46,7 @@ public class ClientHandler implements Runnable{
     @Override
     public void run() {
         count++;
-        if(count>=100){
+        if(count>=timeOut){
             closeConnection("Server Closed Connection");
         }
         try {
@@ -53,6 +56,7 @@ public class ClientHandler implements Runnable{
                 if(server.hasClient(socket)){
                     Logging.log("Packet Received", Severity.Debug);
                     server.getServerUtils().getClientEventManager().dispatchMessage(server.getClient(socket), SerializeData.setData(packet), out);
+                    count = 0;
                 }else{
                     Logging.log("client does not exist", Severity.Warning);
                     Object data = SerializeData.setData(packet);
