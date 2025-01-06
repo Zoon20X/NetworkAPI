@@ -23,16 +23,16 @@ public class Config {
         this.configFile = new File(location);
     }
 
-    public void load(){
-            try (FileInputStream fis = new FileInputStream(configFile)) {
-                LoaderOptions loaderOptions = new LoaderOptions();
-                Yaml yaml = new Yaml(new Constructor(Map.class, loaderOptions));
-                configData = yaml.load(fis);
-                Logging.log("Loaded server configuration", Severity.Debug);
-            } catch (IOException e) {
-                e.printStackTrace();
-                Logging.log( "Failed to read the configuration file", Severity.Critical);
-            }
+    public void load() {
+        try (FileInputStream fis = new FileInputStream(configFile)) {
+            LoaderOptions loaderOptions = new LoaderOptions();
+            Yaml yaml = new Yaml(new Constructor(Map.class, loaderOptions));
+            configData = yaml.load(fis);
+            Logging.log("Loaded server configuration", Severity.Debug);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Logging.log("Failed to read the configuration file", Severity.Critical);
+        }
     }
     public void save(){
         for(String value : configSection.keySet()){

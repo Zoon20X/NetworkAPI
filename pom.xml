@@ -6,14 +6,42 @@
 
     <groupId>me.zoon20x</groupId>
     <artifactId>NetworkAPI</artifactId>
-    <version>1.6</version>
+    <version>1.7</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <id>default-deploy</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>deploy-base</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>deploy-file</goal>
+                        </goals>
+                        <configuration>
+                            <file>${project.build.directory}/NetworkAPI-${project.version}.jar</file>
+                            <groupId>me.zoon20x</groupId>
+                            <artifactId>NetworkAPI</artifactId>
+                            <version>${project.version}</version>
+                            <repositoryId>nexus</repositoryId>
+                            <url>https://repo.codersclub.app/repository/maven-releases/</url>
+                            <pomFile>${project.basedir}/pom.xml</pomFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>org.yaml</groupId>
@@ -21,4 +49,10 @@
             <version>2.0</version>
         </dependency>
     </dependencies>
+    <distributionManagement>
+        <repository>
+            <id>nexus</id>
+            <url>https://repo.codersclub.app/repository/maven-releases/</url>
+        </repository>
+    </distributionManagement>
 </project>
