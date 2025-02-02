@@ -12,15 +12,22 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class Config {
+public class Config implements ConfigUtils {
     private File configFile;
     private Map<String, Object> configData = new HashMap<>();
     private Map<String, ConfigSection> configSection = new HashMap<>();
 
-    public Config(String location){
+    public Config(String location) {
         this.configFile = new File(location);
+        configFile.mkdirs();
+
+    }
+
+    public boolean exists() {
+        return configFile.exists();
     }
 
     public void load() {
@@ -29,13 +36,20 @@ public class Config {
             Yaml yaml = new Yaml(new Constructor(Map.class, loaderOptions));
             configData = yaml.load(fis);
             Logging.log("Loaded server configuration", Severity.Debug);
+
+            for (String s : configData.keySet()) {
+                if (!(configData.get(s) instanceof String)) {
+                    getConfigurationSection(s);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
             Logging.log("Failed to read the configuration file", Severity.Critical);
         }
     }
-    public void save(){
-        for(String value : configSection.keySet()){
+
+    public void save() {
+        for (String value : configSection.keySet()) {
             configData.put(value, configSection.get(value).getConfigSectionData());
         }
 
@@ -45,40 +59,57 @@ public class Config {
             Yaml yaml = new Yaml(options);
             yaml.dump(configData, writer);
             Logging.log("Generated and saved new server configuration", Severity.Debug);
+
         } catch (IOException e) {
             e.printStackTrace();
             Logging.log("Failed to save the configuration file.", Severity.Critical);
+
+
         }
     }
 
-    public int getInteger(String value){
+    @Override
+    public int getInteger(String value) {
         return (int) configData.get(value);
-
     }
-    public String getString(String value){
+
+    @Override
+    public String getString(String value) {
         return (String) configData.get(value);
     }
-    public boolean getBoolean(String value){
+
+    @Override
+    public boolean getBoolean(String value) {
         return (boolean) configData.get(value);
     }
-    public double getDouble(String value){
+
+    @Override
+    public double getDouble(String value) {
         return (double) configData.get(value);
     }
-    public void set(String value, Object data){
+
+    @Override
+    public void set(String value, Object data) {
         configData.put(value, data);
     }
 
-    public ConfigSection getConfigurationSection(String value) {
-        if(!configData.containsKey(value)){
-            configData.put(value, new HashMap<String, Object>());
-        }
-        if(!configSection.containsKey(value)){
-            configSection.put(value, new ConfigSection((Map<String, Object>) configData.get(value)));
-        }
-        return configSection.get(value);
+    @Override
+    public List<String> getStringList(String value) {
+        return (List<String>) configData.get(value);
     }
 
     public File getConfigFile() {
         return configFile;
+    }
+
+    @Override
+    public ConfigSection getConfigurationSection(String value) {
+        if (!configData.containsKey(value)) {
+            configData.put(value, new HashMap<String, Object>());
+        }
+        if (!configSection.containsKey(value)) {
+            configSection.put(value, new ConfigSection((Map<String, Object>) configData.get(value)));
+        }
+        return configSection.get(value);
     }
 }

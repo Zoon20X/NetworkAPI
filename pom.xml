@@ -6,7 +6,7 @@
 
     <groupId>me.zoon20x</groupId>
     <artifactId>NetworkAPI</artifactId>
-    <version>1.7</version>
+    <version>1.7.4</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -48,10 +48,15 @@
             <artifactId>snakeyaml</artifactId>
             <version>2.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
     </dependencies>
     <distributionManagement>
         <repository>
-            <id>nexus</id>
+            <id>admin</id>
             <url>https://repo.codersclub.app/repository/maven-releases/</url>
         </repository>
     </distributionManagement>
