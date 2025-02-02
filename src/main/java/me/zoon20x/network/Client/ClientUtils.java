@@ -1,5 +1,6 @@
 package me.zoon20x.network.Client;
 
+import me.zoon20x.network.Client.events.ServerEventManager;
 import me.zoon20x.network.Packets.AuthPacket;
 import me.zoon20x.network.Packets.DisconnectPacket;
 import me.zoon20x.network.SerializeData;
@@ -28,11 +29,14 @@ public class ClientUtils {
     private String ip;
     private int port;
 
+    private ServerEventManager serverEventManager;
+
     public ClientUtils(Client client, String ip, int port){
         this.client = client;
         this.ip = ip;
         this.port = port;
         setupShutdownHook();
+        serverEventManager = new ServerEventManager();
     }
     private void setupShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -78,5 +82,9 @@ public class ClientUtils {
 
     public ScheduledExecutorService getService() {
         return service;
+    }
+
+    public ServerEventManager getServerEventManager() {
+        return serverEventManager;
     }
 }
