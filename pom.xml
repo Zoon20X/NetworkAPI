@@ -6,7 +6,7 @@
 
     <groupId>me.zoon20x</groupId>
     <artifactId>NetworkAPI</artifactId>
-    <version>1.7.4</version>
+    <version>1.7.7</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -33,7 +33,7 @@
                             <groupId>me.zoon20x</groupId>
                             <artifactId>NetworkAPI</artifactId>
                             <version>${project.version}</version>
-                            <repositoryId>nexus</repositoryId>
+                            <repositoryId>admin</repositoryId>
                             <url>https://repo.codersclub.app/repository/maven-releases/</url>
                             <pomFile>${project.basedir}/pom.xml</pomFile>
                         </configuration>

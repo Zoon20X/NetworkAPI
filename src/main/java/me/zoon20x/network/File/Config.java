@@ -22,7 +22,6 @@ public class Config implements ConfigUtils {
 
     public Config(String location) {
         this.configFile = new File(location);
-        configFile.mkdirs();
 
     }
 
@@ -36,7 +35,6 @@ public class Config implements ConfigUtils {
             Yaml yaml = new Yaml(new Constructor(Map.class, loaderOptions));
             configData = yaml.load(fis);
             Logging.log("Loaded server configuration", Severity.Debug);
-
             for (String s : configData.keySet()) {
                 if (!(configData.get(s) instanceof String)) {
                     getConfigurationSection(s);
