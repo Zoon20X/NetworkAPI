@@ -1,6 +1,7 @@
 target/
 !.mvn/wrapper/maven-wrapper.jar
 /src/test/**/
+/logs/
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
