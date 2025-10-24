@@ -4,7 +4,7 @@ import me.zoon20x.network.Client.Client;
 import me.zoon20x.network.Packets.AuthPacket;
 import me.zoon20x.network.Packets.DisconnectPacket;
 import me.zoon20x.network.SerializeData;
-import me.zoon20x.network.logging.Logging;
+import me.zoon20x.network.logging.Logger;
 import me.zoon20x.network.logging.Severity;
 
 import java.io.BufferedReader;
@@ -54,7 +54,7 @@ public class ClientHandler implements Runnable{
                 hasPacket = true;
                 packet = in.readLine();
                 if(server.hasClient(socket)){
-                    Logging.log("Packet Received", Severity.Debug);
+                    Logger.debug("Packet Received");
                     Object data = SerializeData.setData(packet);
                     if(data instanceof DisconnectPacket) {
                         closeConnection(((DisconnectPacket) data).getReason());
@@ -63,7 +63,7 @@ public class ClientHandler implements Runnable{
                     server.getServerUtils().getClientEventManager().dispatchMessage(server.getClient(socket), data, out);
                     count = 0;
                 }else{
-                    Logging.log("client does not exist", Severity.Warning);
+                    Logger.warn("client does not exist");
                     Object data = SerializeData.setData(packet);
                     if(data instanceof AuthPacket){
                         AuthPacket authPacket = (AuthPacket) data;
@@ -95,7 +95,7 @@ public class ClientHandler implements Runnable{
             if (in != null) in.close();
             if (socket != null) socket.close();
 
-            Logging.log("Connection closed", Severity.Warning);
+            Logger.warn("Connection closed");
             service.shutdown();
         } catch (IOException e) {
             e.printStackTrace();

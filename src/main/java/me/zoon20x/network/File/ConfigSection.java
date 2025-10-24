@@ -1,6 +1,6 @@
 package me.zoon20x.network.File;
 
-import me.zoon20x.network.logging.Logging;
+import me.zoon20x.network.logging.Logger;
 import me.zoon20x.network.logging.Severity;
 
 import java.io.File;
@@ -16,7 +16,6 @@ public class ConfigSection implements ConfigUtils{
         this.configData = configData;
 
         for(String s : configData.keySet()){
-            Logging.log(s, Severity.Critical);
             if(configData.get(s) instanceof Map){
                 addConfigSection(s, (Map<String, Object>) configData.get(s));
             }

@@ -3,7 +3,7 @@ package me.zoon20x.network.Server;
 import me.zoon20x.network.Client.Client;
 import me.zoon20x.network.File.Config;
 import me.zoon20x.network.Server.auth.Authentication;
-import me.zoon20x.network.logging.Logging;
+import me.zoon20x.network.logging.Logger;
 import me.zoon20x.network.logging.Severity;
 
 import java.io.IOException;
@@ -23,20 +23,21 @@ public class Server {
 
     private final HashMap<Socket, Client> connectedClients = new HashMap<>();
 
-    public Server(String ip, int port, Config config){
+    public Server(String ip, int port){
         this.ip = ip;
         this.port = port;
-        this.authentication = new Authentication(config);
+
+        this.authentication = new Authentication(new Config("server.yml"));
     }
 
     public void start(){
         try {
             this.serverSocket = new ServerSocket(this.port);
-            Logging.log("Server running on port:" +this.port, Severity.Debug);
+            Logger.debug("Server running on port:" +this.port);
             this.serverUtils = new ServerUtils(this);
             serverUtils.startClientCheck();
         } catch (IOException e) {
-            Logging.log("Failed to load server", Severity.Critical);
+            Logger.error("Failed to load server");
             throw new RuntimeException(e);
         }
     }
@@ -77,4 +78,5 @@ public class Server {
     public Authentication getAuthentication() {
         return authentication;
     }
+
 }

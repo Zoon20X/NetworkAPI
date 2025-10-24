@@ -7,7 +7,7 @@ import me.zoon20x.network.SerializeData;
 import me.zoon20x.network.Server.Server;
 import me.zoon20x.network.Server.events.ClientListener;
 import me.zoon20x.network.Server.events.ClientMessageEvent;
-import me.zoon20x.network.logging.Logging;
+import me.zoon20x.network.logging.Logger;
 import me.zoon20x.network.logging.Severity;
 
 import java.io.*;
@@ -40,9 +40,10 @@ public class ClientUtils {
     }
     private void setupShutdownHook() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            Logging.log("Application is shutting down...", Severity.Debug);
+            //Logger.debug("Application is shutting down...");
             DisconnectPacket disconnectPacket = new DisconnectPacket("Client Shutdown");
             sendToServer(disconnectPacket);
+
         }));
     }
     public void run(ServerHandler serverHandler){

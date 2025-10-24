@@ -25,4 +25,8 @@ public class DataPacket implements Serializable {
     public HashMap<String, Object> getDataMap() {
         return data;
     }
+
+    public String getId() {
+        return id;
+    }
 }

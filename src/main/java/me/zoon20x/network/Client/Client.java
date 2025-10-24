@@ -1,5 +1,6 @@
 package me.zoon20x.network.Client;
 
+
 import java.io.Serializable;
 
 public class Client implements Serializable {

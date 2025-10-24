@@ -1,6 +1,6 @@
 package me.zoon20x.network.File;
 
-import me.zoon20x.network.logging.Logging;
+import me.zoon20x.network.logging.Logger;
 import me.zoon20x.network.logging.Severity;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
@@ -16,12 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 public class Config implements ConfigUtils {
+
     private File configFile;
     private Map<String, Object> configData = new HashMap<>();
     private Map<String, ConfigSection> configSection = new HashMap<>();
 
     public Config(String location) {
         this.configFile = new File(location);
+
 
     }
 
@@ -34,7 +36,7 @@ public class Config implements ConfigUtils {
             LoaderOptions loaderOptions = new LoaderOptions();
             Yaml yaml = new Yaml(new Constructor(Map.class, loaderOptions));
             configData = yaml.load(fis);
-            Logging.log("Loaded server configuration", Severity.Debug);
+            Logger.debug("Loaded: " + configFile.getName());
             for (String s : configData.keySet()) {
                 if (!(configData.get(s) instanceof String)) {
                     getConfigurationSection(s);
@@ -42,7 +44,7 @@ public class Config implements ConfigUtils {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            Logging.log("Failed to read the configuration file", Severity.Critical);
+            Logger.error("Failed to read the configuration file");
         }
     }
 
@@ -56,11 +58,11 @@ public class Config implements ConfigUtils {
             options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
             Yaml yaml = new Yaml(options);
             yaml.dump(configData, writer);
-            Logging.log("Generated and saved new server configuration", Severity.Debug);
+            Logger.debug("Saved: " + configFile.getName());
 
         } catch (IOException e) {
             e.printStackTrace();
-            Logging.log("Failed to save the configuration file.", Severity.Critical);
+            Logger.error("Failed to save the configuration file.");
 
 
         }

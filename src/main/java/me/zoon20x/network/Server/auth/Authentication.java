@@ -1,7 +1,7 @@
 package me.zoon20x.network.Server.auth;
 
 import me.zoon20x.network.File.Config;
-import me.zoon20x.network.logging.Logging;
+import me.zoon20x.network.logging.Logger;
 import me.zoon20x.network.logging.Severity;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
@@ -17,6 +17,7 @@ public class Authentication {
     private String serverToken;
     private Config config;
 
+
     public Authentication(Config config){
         this.config = config;
         initializeToken();
@@ -26,17 +27,16 @@ public class Authentication {
         if(config.getConfigFile().exists()){
             config.load();
             serverToken = config.getConfigurationSection("Server").getString("Token");
-            Logging.log(serverToken, Severity.Debug);
+            Logger.debug("Server Token: " + serverToken);
         }else{
             generateServerToken();
             config.getConfigurationSection("Server").set("Token", serverToken);
             config.save();
         }
-
     }
     public void generateServerToken() {
         serverToken = UUID.randomUUID().toString();
-        Logging.log("Server Token: " + serverToken, Severity.Debug);
+        Logger.debug("Server Token: " + serverToken);
     }
     public boolean validateClientToken(String clientToken) {
         return serverToken.equals(clientToken);
