@@ -9,11 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ConfigSection implements ConfigUtils{
-    private Map<String, Object> configData = new HashMap<>();
-    private Map<String, ConfigSection> configSection = new HashMap<>();
+    private final Map<String, Object> configData;
+    private final Map<String, ConfigSection> configSection;
 
     public ConfigSection(Map<String, Object> configData) {
         this.configData = configData;
+        this.configSection = new HashMap<>();
 
         for(String s : configData.keySet()){
             if(configData.get(s) instanceof Map){

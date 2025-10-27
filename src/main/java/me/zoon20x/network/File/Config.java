@@ -17,13 +17,14 @@ import java.util.Map;
 
 public class Config implements ConfigUtils {
 
-    private File configFile;
-    private Map<String, Object> configData = new HashMap<>();
-    private Map<String, ConfigSection> configSection = new HashMap<>();
+    private final File configFile;
+    private Map<String, Object> configData;
+    private final Map<String, ConfigSection> configSection;
 
     public Config(String location) {
         this.configFile = new File(location);
-
+        this.configData = new HashMap<>();
+        this.configSection = new HashMap<>();
 
     }
 
