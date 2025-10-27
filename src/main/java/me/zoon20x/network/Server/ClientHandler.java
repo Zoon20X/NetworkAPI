@@ -28,13 +28,14 @@ public class ClientHandler implements Runnable{
     private String packet;
 
     private int timeOut;
+    private boolean useTimeOut;
 
 
     public ClientHandler(Server server, Socket socket){
         this.server = server;
         this.socket = socket;
         this.count = 0;
-        timeOut = 10*300;
+        useTimeOut = false;
         try {
             this.out = new PrintWriter(socket.getOutputStream(), true);
             this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -45,9 +46,11 @@ public class ClientHandler implements Runnable{
 
     @Override
     public void run() {
-        count++;
-        if(count>=timeOut){
-            closeConnection("Server Closed Connection");
+        if(useTimeOut) {
+            count++;
+            if (count >= timeOut) {
+                closeConnection("Server Closed Connection");
+            }
         }
         try {
             if (in.ready()) {
@@ -112,5 +115,10 @@ public class ClientHandler implements Runnable{
 
     public String getPacket() {
         return packet;
+    }
+
+    public void enableTimeOut(int timeOut){
+        this.timeOut = timeOut;
+        this.useTimeOut = true;
     }
 }
